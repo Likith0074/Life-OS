@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { supabase } from './lib/supabase'
-import { Check, ClipboardList, TrendingUp, Home, PlusCircle, Target } from 'lucide-react'
+import { Check, ClipboardList, TrendingUp, Home, PlusCircle, Target, Building } from 'lucide-react'
 
 // Hooks
+import { useRent } from './hooks/useRent'
 import { useDailyLog } from './hooks/useDailyLog'
 import { useSupplements } from './hooks/useSupplements'
 import { useBodyStats } from './hooks/useBodyStats'
@@ -15,6 +16,7 @@ import { SKINCARE_STEPS } from './data/skincare'
 
 // Components
 import { ProgressTab } from './components/ProgressTab'
+import RentTab from './components/RentTab'
 import { BodyStatsModal } from './components/BodyStatsModal'
 import { WorkoutModal } from './components/WorkoutModal'
 
@@ -31,6 +33,7 @@ export default function Dashboard({ session }) {
   const { logs: skinLogs, loading: skinLoading, toggleSkincare } = useSkincare(userId)
   const { stats: bodyStats, loading: bodyLoading, addStat } = useBodyStats(userId)
   const { logs: trainingLogs, loading: trainLoading, addLog: addWorkout } = useTrainingLog(userId)
+  const { properties, tenants, rentLogs, addProperty, addTenant, createRentLog, logRentPayment } = useRent(userId)
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -330,11 +333,27 @@ export default function Dashboard({ session }) {
           <ProgressTab bodyStats={bodyStats} trainingLogs={trainingLogs} logs={log} />
         )}
 
+        {/* RENT TAB */}
+        {activeTab === 'rent' && (
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <h2 className="text-xl font-bold text-white mb-6">Property Management</h2>
+            <RentTab 
+              properties={properties} 
+              tenants={tenants} 
+              rentLogs={rentLogs} 
+              addProperty={addProperty} 
+              addTenant={addTenant} 
+              createRentLog={createRentLog} 
+              logRentPayment={logRentPayment} 
+            />
+          </div>
+        )}
+
       </main>
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-slate-800 px-6 py-3 pb-8 z-20">
-        <div className="flex justify-between items-center max-w-sm mx-auto">
+        <div className="flex justify-between items-center max-w-md mx-auto">
           <button 
             onClick={() => setActiveTab('home')}
             className={`flex flex-col items-center gap-1.5 transition-colors ${activeTab === 'home' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
@@ -355,6 +374,13 @@ export default function Dashboard({ session }) {
           >
             <TrendingUp size={22} strokeWidth={activeTab === 'progress' ? 2.5 : 2} />
             <span className="text-[10px] font-medium">Progress</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('rent')}
+            className={`flex flex-col items-center gap-1.5 transition-colors ${activeTab === 'rent' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`}
+          >
+            <Building size={22} strokeWidth={activeTab === 'rent' ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">Properties</span>
           </button>
         </div>
       </nav>
