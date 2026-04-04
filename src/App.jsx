@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom'
 import { supabase } from './lib/supabase'
 import Auth from './Auth'
+import Hub from './Hub'
 import Dashboard from './Dashboard'
+import RentDashboard from './RentDashboard'
 import './index.css'
 
 function App() {
@@ -26,7 +28,13 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
+          session ? <Hub session={session} /> : <Auth />
+        } />
+        <Route path="/health" element={
           session ? <Dashboard key={session.user.id} session={session} /> : <Auth />
+        } />
+        <Route path="/rent" element={
+          session ? <RentDashboard key={`rent-${session.user.id}`} session={session} /> : <Auth />
         } />
         <Route path="/share/:token" element={<TrainerView />} />
       </Routes>
