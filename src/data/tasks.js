@@ -1,0 +1,31 @@
+export const DAILY_TASKS = [
+  { id: 'wash-am', time: '5:00 AM', title: 'Face wash', desc: 'Episoft OC cleanser — 60 sec', category: 'Skincare', colorColor: 'text-green-400', bgColor: 'bg-green-500/10' },
+  { id: 'gym', time: '5:30 AM', title: 'Gym + ankle rehab', desc: 'Weights 45-60 min + rehab 10 min + core 10 min', category: 'Training', colorColor: 'text-blue-400', bgColor: 'bg-blue-500/10' },
+  { id: 'whey', time: '7:00 AM', title: 'Whey protein', desc: 'AS-IT-IS 1 scoop post workout', category: 'Supplement', colorColor: 'text-red-400', bgColor: 'bg-red-500/10' },
+  { id: 'skin-am', time: '7:15 AM', title: 'AM skincare', desc: 'Niacinamide -> Moisturiser -> Suncros SPF', category: 'Skincare', colorColor: 'text-green-400', bgColor: 'bg-green-500/10' },
+  { id: 'bfast', time: '7:30 AM', title: 'Breakfast', desc: 'Check meal plan', category: 'Food', colorColor: 'text-amber-400', bgColor: 'bg-amber-500/10' },
+  { id: 'supp-am', time: '8:00 AM', title: 'AM supplements', desc: 'Calcium D3 + B-Complex + Collagen 10g', category: 'Supplement', colorColor: 'text-red-400', bgColor: 'bg-red-500/10' },
+  { id: 'lunch', time: '1:00 PM', title: 'Lunch', desc: 'Check meal plan', category: 'Food', colorColor: 'text-amber-400', bgColor: 'bg-amber-500/10' },
+  { id: 'supp-pm', time: '1:15 PM', title: 'PM supplements', desc: 'Omega 3 + Finasteride 1mg with food', category: 'Supplement', colorColor: 'text-red-400', bgColor: 'bg-red-500/10' },
+  { id: 'spf', time: '3:00 PM', title: 'Reapply SPF', desc: 'Suncros SPF 50+', category: 'Skincare', colorColor: 'text-green-400', bgColor: 'bg-green-500/10' },
+  { id: 'snack', time: '4:00 PM', title: 'Snack', desc: 'Protein buttermilk OR roasted chana', category: 'Food', colorColor: 'text-amber-400', bgColor: 'bg-amber-500/10' },
+  { id: 'dinner', time: '8:00 PM', title: 'Dinner', desc: 'Check meal plan', category: 'Food', colorColor: 'text-amber-400', bgColor: 'bg-amber-500/10' },
+  { id: 'skin-pm', time: '8:15 PM', title: 'PM skincare', desc: 'Episoft cleanser -> Azibrite cream', category: 'Skincare', colorColor: 'text-green-400', bgColor: 'bg-green-500/10' },
+  { id: 'keroliv', time: '8:30 PM', title: 'Keroliv Men', desc: 'After dinner', category: 'Supplement', colorColor: 'text-red-400', bgColor: 'bg-red-500/10' },
+  { id: 'hair', time: '9:00 PM', title: 'Hair serum', desc: 'Bare Anatomy - scalp only', category: 'Haircare', colorColor: 'text-emerald-400', bgColor: 'bg-emerald-500/10' },
+  { id: 'magnesium', time: '9:30 PM', title: 'Magnesium', desc: '300mg Glycinate before sleep', category: 'Supplement', colorColor: 'text-red-400', bgColor: 'bg-red-500/10' },
+  { id: 'sleep', time: '10:30 PM', title: 'Sleep', desc: '7 hours minimum', category: 'Recovery', colorColor: 'text-slate-400', bgColor: 'bg-slate-500/10' },
+]
+
+export const SUPPLEMENTS = [
+  { id: 'whey', name: 'Whey Protein (AS-IT-IS)', dose: '1 scoop (24g)', time: '7:00 AM', food: 'No — water only', status: 'Active' },
+  { id: 'calcium', name: 'Calcium + D3', dose: '2 tabs', time: '8:00 AM', food: 'Yes', status: 'Active' },
+  { id: 'bcomplex', name: 'B-Complex', dose: '1 cap', time: '8:00 AM', food: 'Yes', status: 'Active' },
+  { id: 'collagen', name: 'Collagen Peptides', dose: '10g', time: '8:00 AM', food: 'In water', status: 'Active' },
+  { id: 'omega', name: 'Omega 3', dose: '1 cap', time: '1:15 PM', food: 'Yes', status: 'Active' },
+  { id: 'finasteride', name: 'Finasteride 1mg', dose: '1 tab', time: '1:15 PM', food: 'Yes', status: 'Prescribed' },
+  { id: 'keroliv', name: 'Keroliv Men', dose: '1 tab', time: 'After dinner', food: 'Yes', status: 'Prescribed' },
+  { id: 'magnesium', name: 'Magnesium Glycinate', dose: '300mg', time: '9:30 PM', food: 'Water only', status: 'Active' },
+  { id: 'd3k2', name: 'D3 2000IU + K2', dose: '1 tab', time: 'After dinner', food: 'Yes', status: 'Post blood test' },
+  { id: 'b12', name: 'Methylcobalamin B12', dose: '1 tab', time: 'After dinner', food: 'Yes', status: 'Post blood test' },
+]
