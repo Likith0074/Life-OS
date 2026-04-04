@@ -16,22 +16,23 @@ export default function Auth() {
     let error;
 
     if (isSignUp) {
-      const res = await supabase.auth.signUp({ 
-        email, 
-        password 
-      })
+      const res = await supabase.auth.signUp({ email, password })
       error = res.error
-      if (!error && res.data?.user?.identities?.length === 0) {
-         setMessage("Account already exists. Please log in.")
-         setIsSignUp(false)
-      } else if (!error) {
-         setMessage('Check your email for the confirmation link to verify your account!')
+      if (!error) {
+        if (res.data?.user?.identities?.length === 0) {
+          // User already exists
+          setMessage("Account already exists. Please log in instead.")
+          setIsSignUp(false)
+        } else if (res.data?.session) {
+          // Email confirm is OFF → session granted instantly → App.jsx onAuthStateChange handles redirect
+          // No need to do anything here
+        } else {
+          // Email confirm is ON → user must click link in email
+          setMessage('Account created! Check your email for a confirmation link before logging in.')
+        }
       }
     } else {
-      const res = await supabase.auth.signInWithPassword({ 
-        email, 
-        password 
-      })
+      const res = await supabase.auth.signInWithPassword({ email, password })
       error = res.error
     }
 
