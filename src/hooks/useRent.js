@@ -119,5 +119,10 @@ export function useRent(userId) {
     }
   }
 
-  return { properties, tenants, rentLogs, loading, addProperty, addTenant, logRentPayment, createRentLog, refreshData: fetchData }
+  const deleteRentLog = async (logId) => {
+    const { error } = await supabase.from('rent_logs').delete().eq('id', logId)
+    if (!error) setRentLogs(rentLogs.filter(l => l.id !== logId))
+  }
+
+  return { properties, tenants, rentLogs, loading, addProperty, addTenant, logRentPayment, createRentLog, deleteRentLog, refreshData: fetchData }
 }
