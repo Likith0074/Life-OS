@@ -79,14 +79,54 @@ export default function Dashboard({ session }) {
   const totalRun = trainingLogs.reduce((sum, l) => sum + (l.run_km || 0), 0)
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 font-sans pb-24">
+    <div className="min-h-screen bg-[#0f172a] text-slate-200 font-sans flex">
+      {/* Desktop Sidebar Nav */}
+      <aside className="hidden md:flex flex-col w-56 bg-slate-900/80 border-r border-slate-800 sticky top-0 h-screen shrink-0 p-5">
+        <div className="flex items-center gap-3 mb-8">
+          <a href="/" className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+            <ArrowLeft size={14} />
+          </a>
+          <div>
+            <p className="text-xs font-black text-blue-400 tracking-wider uppercase">Health OS</p>
+            <p className="text-[10px] text-slate-500">Life OS</p>
+          </div>
+        </div>
+        <nav className="space-y-1 flex-1">
+          {[['home', 'Home', Home], ['log', 'Log', ClipboardList], ['progress', 'Progress', TrendingUp]].map(([tab, label, Icon]) => (
+            <button key={tab} onClick={() => setActiveTab(tab)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                activeTab === tab ? 'bg-blue-500/10 text-blue-400' : 'text-slate-500 hover:text-slate-200 hover:bg-slate-800'
+              }`}>
+              <Icon size={18} strokeWidth={activeTab === tab ? 2.5 : 1.8} />
+              {label}
+            </button>
+          ))}
+
+          <div className="pt-4 border-t border-slate-800 mt-4 space-y-1">
+            <button onClick={handleShare}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:text-blue-400 hover:bg-slate-800 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              Share with Trainer
+            </button>
+            <button onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Log Out
+            </button>
+          </div>
+        </nav>
+      </aside>
+
+      {/* Main area */}
+      <div className="flex-1 min-w-0 flex flex-col pb-24 md:pb-0">
+
       
       {/* Modals */}
       {showStatsModal && <BodyStatsModal onClose={() => setShowStatsModal(false)} onSubmit={addStat} />}
       {showWorkoutModal && <WorkoutModal onClose={() => setShowWorkoutModal(false)} onSubmit={addWorkout} />}
 
       {/* Header */}
-      <header className="px-6 py-6 border-b border-slate-800/60 bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 transition-all">
+      <header className="px-5 py-5 border-b border-slate-800/60 bg-slate-900/90 backdrop-blur-md sticky top-0 z-10">
         <div className="flex justify-between items-center mb-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -151,7 +191,7 @@ export default function Dashboard({ session }) {
       </header>
 
       {/* Main Content Areas */}
-      <main className="px-6 mt-6">
+      <main className="px-5 mt-6 max-w-4xl w-full mx-auto">
         
         {/* HOME TAB */}
         {activeTab === 'home' && (
@@ -339,9 +379,10 @@ export default function Dashboard({ session }) {
         {/* RENT TAB DISABLED - MOVED TO HUB */}
 
       </main>
+      </div> {/* end main area */}
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-slate-800 px-6 py-3 pb-8 z-20">
+      {/* Bottom Navigation (Mobile Only) */}
+      <nav className="md:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-xl border-t border-slate-800 px-6 py-3 pb-8 z-20">
         <div className="flex justify-between items-center max-w-sm mx-auto">
           <button 
             onClick={() => setActiveTab('home')}
