@@ -529,10 +529,42 @@ export default function RentDashboard({ session }) {
                           {prop.address && <p className="text-xs text-slate-500 mb-2">{prop.address}</p>}
                           {isEd && <PropEditForm prop={prop} onSave={async(form)=>{await updateProperty(prop.id,form);setEditPropId(null)}} onCancel={()=>setEditPropId(null)}/>}
                           {propTenants.length > 0 ? (
-                            <div className="flex flex-wrap gap-2 mt-2">{propTenants.map(t=>(
-                              <span key={t.id} className={`text-xs px-3 py-1 rounded-full ${t.is_active===false?'bg-slate-800 text-slate-500 line-through':'bg-slate-700 text-slate-300'}`}>{t.name} · ₹{Number(t.base_rent).toLocaleString()}</span>
-                            ))}</div>
-                          ) : <p className="text-xs text-slate-600 italic mt-2">No tenants</p>}
+                            <div className="mt-3 space-y-2">
+                              {propTenants.map(t => {
+                                const isTenantEd = editTenantId === t.id
+                                return (
+                                  <div key={t.id} className={`rounded-xl border p-3 transition-colors ${t.is_active===false ? 'bg-slate-900/30 border-slate-800 opacity-60' : 'bg-slate-900/60 border-slate-700'}`}>
+                                    {isTenantEd ? (
+                                      <TenantEditForm tenant={t} properties={properties}
+                                        onSave={async(form) => { await updateTenant(t.id, { ...form, base_rent: Number(form.base_rent), advance_paid: Number(form.advance_paid), annual_increment_pct: Number(form.annual_increment_pct) }); setEditTenantId(null) }}
+                                        onCancel={() => setEditTenantId(null)} />
+                                    ) : (
+                                      <div>
+                                        <div className="flex justify-between items-center">
+                                          <div>
+                                            <p className={`text-sm font-semibold ${t.is_active===false ? 'text-slate-500 line-through' : 'text-white'}`}>{t.name}</p>
+                                            <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-0.5">
+                                              <span className="text-[10px] text-emerald-400 font-mono">₹{Number(t.base_rent).toLocaleString()}/mo</span>
+                                              {t.annual_increment_pct > 0 && <span className="text-[10px] text-blue-400">{t.annual_increment_pct}%/yr</span>}
+                                              {t.advance_paid > 0 && <span className="text-[10px] text-amber-400">Adv ₹{Number(t.advance_paid).toLocaleString()}</span>}
+                                              {t.move_in_date && <span className="text-[10px] text-slate-500">Since {t.move_in_date}</span>}
+                                            </div>
+                                          </div>
+                                          <div className="flex gap-1.5 ml-3 shrink-0">
+                                            <button onClick={() => setEditTenantId(t.id)} className="text-slate-500 hover:text-blue-400 p-1 transition-colors" title="Edit tenant"><Pencil size={13}/></button>
+                                            <button onClick={() => updateTenant(t.id, { is_active: t.is_active === false })} className="text-slate-500 hover:text-amber-400 p-1 transition-colors" title={t.is_active===false?'Reactivate':'Deactivate'}>
+                                              {t.is_active===false ? <UserCheck size={13}/> : <UserX size={13}/>}
+                                            </button>
+                                            <button onClick={() => { if(confirm(`Delete ${t.name}?`)) deleteTenant(t.id) }} className="text-slate-500 hover:text-rose-400 p-1 transition-colors"><Trash2 size={13}/></button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          ) : <p className="text-xs text-slate-600 italic mt-2">No tenants assigned</p>}
                         </div>
                       )
                     })}
