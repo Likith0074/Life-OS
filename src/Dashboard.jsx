@@ -101,6 +101,12 @@ export default function Dashboard({ session }) {
   const [activeTab, setActiveTab] = useState('home')
   const [showStatsModal, setShowStatsModal] = useState(false)
   const [showWorkoutModal, setShowWorkoutModal] = useState(false)
+  const [toast, setToast] = useState(null) // { msg, type }
+
+  const showToast = (msg, type = 'success') => {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   const userId = session.user.id
 
@@ -116,10 +122,22 @@ export default function Dashboard({ session }) {
     const expires = new Date()
     expires.setDate(expires.getDate() + 30)
     const { data: existing } = await supabase.from('share_links').select('*').eq('user_id', session.user.id).eq('revoked', false).single()
-    if (existing) { alert(`Your trainer link: ${window.location.origin}/share/${existing.token}`); return }
-    const { data, error } = await supabase.from('share_links').insert({ user_id: session.user.id, expires_at: expires.toISOString() }).select().single()
-    if (data) alert(`New trainer link:\n\n${window.location.origin}/share/${data.token}`)
-    else alert('Error: ' + error?.message)
+    const token = existing?.token
+    let shareUrl
+    if (existing) {
+      shareUrl = `${window.location.origin}/share/${token}`
+    } else {
+      const { data, error } = await supabase.from('share_links').insert({ user_id: session.user.id, expires_at: expires.toISOString() }).select().single()
+      if (error || !data) { showToast('Error generating link', 'error'); return }
+      shareUrl = `${window.location.origin}/share/${data.token}`
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      showToast('Trainer link copied to clipboard! 🔗')
+    } catch {
+      // Fallback: show a selectable prompt
+      window.prompt('Copy your trainer link:', shareUrl)
+    }
   }
 
   const completedCount = log?.completed_tasks?.length || 0
@@ -177,8 +195,17 @@ export default function Dashboard({ session }) {
 
       {/* Main Area */}
       <div className="flex-1 min-w-0 flex flex-col pb-24 md:pb-0">
-        {showStatsModal && <BodyStatsModal onClose={() => setShowStatsModal(false)} onSubmit={addStat} />}
-        {showWorkoutModal && <WorkoutModal onClose={() => setShowWorkoutModal(false)} onSubmit={addWorkout} />}
+      {/* Toast Notification */}
+      {toast && (
+        <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl text-sm font-semibold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300 ${
+          toast.type === 'error' ? 'bg-rose-600 text-white' : 'bg-emerald-600 text-white'
+        }`}>
+          {toast.type === 'error' ? '❌' : '✅'} {toast.msg}
+        </div>
+      )}
+
+      {showStatsModal && <BodyStatsModal onClose={() => setShowStatsModal(false)} onSubmit={addStat} />}
+      {showWorkoutModal && <WorkoutModal onClose={() => setShowWorkoutModal(false)} onSubmit={addWorkout} />}
 
         {/* Header */}
         <header className="px-5 py-4 border-b border-slate-800/60 bg-slate-900/90 backdrop-blur-md sticky top-0 z-10">
